@@ -122,7 +122,24 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func port() -> Int {
-        return url.port!.integerValue
+        var port = 0
+
+        if let p = url.port {
+            port = p.integerValue
+        } else {
+            if let scheme = url.scheme {
+                switch scheme {
+                case "http":
+                    port = 80
+                case "https":
+                    port = 443
+                default:
+                    break
+                }
+            }
+        }
+
+        return port
     }
 
     public func didConnect() {
