@@ -29,36 +29,27 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public weak var delegate: TCPClientDelegate?
     public private(set) var url: NSURL
     public private(set) var configuration: TCPClientConfiguration
-    public private(set) var open: Bool
+    public private(set) var open = false
 
     var inputStream: NSInputStream!
     var outputStream: NSOutputStream!
-    var writers: [Writer]!
+    var writers = [Writer]()
 
     private var opensCompleted = 0
 
     public init(url: NSURL, configuration: TCPClientConfiguration) {
         self.url = url
         self.configuration = configuration
-        self.open = false
     }
 
     public func connect() -> Bool {
         var success = false
 
-        if !open {
-            success = createStreams()
-
-            if success {
-                success = configureStreams()
-            }
-
-            if success {
-                prepareForOpenStreams()
-                openStreams()
-                success = true
-                open = true
-            }
+        if !open && createStreams() && configureStreams() {
+            prepareForOpenStreams()
+            openStreams()
+            success = true
+            open = true
         }
 
         if !success {
@@ -77,15 +68,16 @@ public class TCPClient: NSObject, NSStreamDelegate {
             inputStream = nil
             outputStream = nil
             open = false
-            writers = nil
+            writers.removeAll(keepCapacity: false)
         }
     }
 
     // MARK: Writing
 
     public func write(writer: Writer) {
+        writers.append(writer)
+
         if open {
-            writers.append(writer)
             write()
         }
     }
@@ -144,6 +136,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
 
     public func didConnect() {
         delegate?.tcpClientDidConnect?(self)
+        write()
     }
 
     public func didDisconnectWithError(error: NSError?) {
@@ -158,7 +151,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
         configuration.reader.client = self
         configuration.reader.prepare()
         opensCompleted = 0
-        writers = [Writer]()
+        writers.removeAll(keepCapacity: false)
     }
 
     // MARK: Private

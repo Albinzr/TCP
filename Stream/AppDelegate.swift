@@ -29,6 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
             client.connect()
+
+            if let string = StringWriter(string: "Hello, world! 1") {
+                client.write(string)
+            }
         }
 
         return true
@@ -37,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
     func tcpClientDidConnect(client: TCPClient) {
         println("client did connect")
 
-        if let string = StringWriter(string: "Hello, world!") {
+        if let string = StringWriter(string: "Hello, world! 2") {
             client.write(string)
         }
     }
