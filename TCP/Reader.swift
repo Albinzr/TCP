@@ -10,6 +10,8 @@ import Foundation
 
 public protocol Reader {
 
+    weak var client: TCPClient! { set get }
+
     func prepare()
 
     func handleData(data: NSData)

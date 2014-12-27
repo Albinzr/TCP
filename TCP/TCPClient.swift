@@ -10,6 +10,7 @@ import Foundation
 
 public class TCPClient: NSObject, NSStreamDelegate {
 
+    public weak var delegate: TCPClientDelegate?
     public private(set) var host: String
     public private(set) var port: Int
     public private(set) var configuration: TCPClientConfiguration
@@ -53,18 +54,23 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func disconnect() {
-        inputStream.delegate = nil
-        outputStream.delegate = nil
-        inputStream.close()
-        outputStream.close()
-        inputStream = nil
-        outputStream = nil
-        open = false
+        if open {
+            inputStream.delegate = nil
+            outputStream.delegate = nil
+            inputStream.close()
+            outputStream.close()
+            inputStream = nil
+            outputStream = nil
+            open = false
+            writers = nil
+        }
     }
 
     public func write(writer: Writer) {
-        writers.append(writer)
-        write()
+        if open {
+            writers.append(writer)
+            write()
+        }
     }
 
     public func writeData(data: NSData) {
@@ -92,6 +98,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     func prepareForOpenStreams() {
+        configuration.reader.client = self
         configuration.reader.prepare()
         opensCompleted = 0
         writers = [Writer]()
@@ -121,7 +128,9 @@ public class TCPClient: NSObject, NSStreamDelegate {
         case NSStreamEvent.ErrorOccurred:
             fallthrough
         case NSStreamEvent.EndEncountered:
-            println("close \(aStream.streamError)")
+            let error = aStream.streamError
+            disconnect()
+            delegate?.tcpClientDidDisconnectWithError?(self, streamError: error)
         default:
             break
         }
@@ -137,22 +146,27 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     private func write() {
-        while writers.count > 0 && outputStream.hasSpaceAvailable {
-            let writer = writers[0]
-            let (complete, bytesWritten) = writer.writeToStream(outputStream)
+        if open {
+            while writers.count > 0 && outputStream.hasSpaceAvailable {
+                let writer = writers[0]
+                let (complete, bytesWritten) = writer.writeToStream(outputStream)
 
-            if bytesWritten <= 0 {
-                println("error")
-            }
+                // TODO: Figure out interaction here with the stream event handler.
+                // Just break and print errno for now
+                if bytesWritten <= 0 {
+                    println("error \(errno)")
+                    break
+                }
 
-            if complete {
-                writers.removeAtIndex(0)
+                if complete {
+                    writers.removeAtIndex(0)
+                }
             }
         }
     }
 
     func didConnect() {
-        println("open")
+        delegate?.tcpClientDidConnect?(self)
     }
 
 }

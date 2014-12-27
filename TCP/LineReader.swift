@@ -43,7 +43,7 @@ public class LineReader: SimpleReader {
     public var lineDelimiter = LineDelimiter.CRLF
     public var lineDelimiterData: NSData!
     public var stringEncoding = NSUTF8StringEncoding
-    public var stringCallbackBlock: ((string: String) -> ())!
+    public var stringCallbackBlock: ((client: TCPClient!, string: String) -> ())!
 
     public override func prepare() {
         data = NSMutableData()
@@ -74,12 +74,12 @@ public class LineReader: SimpleReader {
                     if stringCallbackBlock != nil {
                         if let string = NSString(data: allLineData, encoding: self.stringEncoding) {
                             dispatch_async(callbackQueue, {
-                                self.stringCallbackBlock(string: string)
+                                self.stringCallbackBlock(client: self.client, string: string)
                             })
                         }
                     } else {
                         dispatch_async(callbackQueue, {
-                            self.dataCallbackBlock(data: allLineData)
+                            self.dataCallbackBlock(client: self.client, data: allLineData)
                         })
                     }
                 }

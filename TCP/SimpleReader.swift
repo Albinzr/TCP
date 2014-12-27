@@ -10,8 +10,9 @@ import Foundation
 
 public class SimpleReader: Reader {
 
+    public weak var client: TCPClient!
     public var callbackQueue = dispatch_get_main_queue()
-    public var dataCallbackBlock: ((data: NSData) -> ())!
+    public var dataCallbackBlock: ((client: TCPClient!, data: NSData) -> ())!
 
     public init() {
         
@@ -24,7 +25,7 @@ public class SimpleReader: Reader {
     public func handleData(data: NSData) {
         if callbackQueue != nil && dataCallbackBlock != nil{
             dispatch_async(callbackQueue, {
-                self.dataCallbackBlock(data: data)
+                self.dataCallbackBlock(client: self.client, data: data)
             })
         }
     }
