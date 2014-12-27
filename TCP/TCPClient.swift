@@ -30,6 +30,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public private(set) var url: NSURL
     public private(set) var configuration: TCPClientConfiguration
     public private(set) var open = false
+    public var secure = false
 
     var inputStream: NSInputStream!
     var outputStream: NSOutputStream!
@@ -114,24 +115,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func port() -> Int {
-        var port = 0
-
-        if let p = url.port {
-            port = p.integerValue
-        } else {
-            if let scheme = url.scheme {
-                switch scheme {
-                case "http":
-                    port = 80
-                case "https":
-                    port = 443
-                default:
-                    break
-                }
-            }
-        }
-
-        return port
+        return url.port!.integerValue
     }
 
     public func didConnect() {
@@ -144,6 +128,10 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func configureStreams() -> Bool {
+        if secure {
+            outputStream.setProperty(kCFStreamSocketSecurityLevelNegotiatedSSL, forKey: kCFStreamPropertySocketSecurityLevel)
+        }
+
         return true
     }
 
