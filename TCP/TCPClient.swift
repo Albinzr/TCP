@@ -27,10 +27,9 @@ import Foundation
 public class TCPClient: NSObject, NSStreamDelegate {
 
     public weak var delegate: TCPClientDelegate?
-    public private(set) var host: String
-    public private(set) var port: Int
+    public private(set) var url: NSURL
     public private(set) var configuration: TCPClientConfiguration
-    public private(set) var open = false
+    public private(set) var open: Bool
 
     var inputStream: NSInputStream!
     var outputStream: NSOutputStream!
@@ -38,10 +37,10 @@ public class TCPClient: NSObject, NSStreamDelegate {
 
     private var opensCompleted = 0
 
-    public init(host: String, port: Int, configuration: TCPClientConfiguration) {
-        self.host = host
-        self.port = port
+    public init(url: NSURL, configuration: TCPClientConfiguration) {
+        self.url = url
         self.configuration = configuration
+        self.open = false
     }
 
     public func connect() -> Bool {
@@ -55,8 +54,8 @@ public class TCPClient: NSObject, NSStreamDelegate {
             }
 
             if success {
-                openStreams()
                 prepareForOpenStreams()
+                openStreams()
                 success = true
                 open = true
             }
@@ -82,6 +81,8 @@ public class TCPClient: NSObject, NSStreamDelegate {
         }
     }
 
+    // MARK: Writing
+
     public func write(writer: Writer) {
         if open {
             writers.append(writer)
@@ -93,41 +94,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
         write(DataWriter(data: data))
     }
 
-    func createStreams() -> Bool {
-        var iStream: NSInputStream?
-        var oStream: NSOutputStream?
-        NSStream.getStreamsToHostWithName(host, port: port, inputStream: &iStream, outputStream: &oStream)
-
-        if iStream != nil && oStream != nil {
-            inputStream = iStream!
-            outputStream = oStream!
-            inputStream.delegate = self
-            outputStream.delegate = self
-            return true
-        } else {
-            return false
-        }
-    }
-
-    func configureStreams() -> Bool {
-        return true
-    }
-
-    func prepareForOpenStreams() {
-        configuration.reader.client = self
-        configuration.reader.prepare()
-        opensCompleted = 0
-        writers = [Writer]()
-    }
-
-    func openStreams() {
-        let runLoop = NSRunLoop.currentRunLoop()
-        let mode = NSDefaultRunLoopMode
-        inputStream.scheduleInRunLoop(runLoop, forMode: mode)
-        outputStream.scheduleInRunLoop(runLoop, forMode: mode)
-        inputStream.open()
-        outputStream.open()
-    }
+    // MARK: NSStreamDelegate methods
 
     public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
         switch eventCode {
@@ -146,10 +113,66 @@ public class TCPClient: NSObject, NSStreamDelegate {
         case NSStreamEvent.EndEncountered:
             let error = aStream.streamError
             disconnect()
-            delegate?.tcpClientDidDisconnectWithError?(self, streamError: error)
+            didDisconnectWithError(error)
         default:
             break
         }
+    }
+
+    // MARK: Methods to subclass
+
+    public func host() -> String {
+        return url.host!
+    }
+
+    public func port() -> Int {
+        return url.port!.integerValue
+    }
+
+    public func didConnect() {
+        delegate?.tcpClientDidConnect?(self)
+    }
+
+    public func didDisconnectWithError(error: NSError?) {
+        delegate?.tcpClientDidDisconnectWithError?(self, streamError: error)
+    }
+
+    public func configureStreams() -> Bool {
+        return true
+    }
+
+    public func prepareForOpenStreams() {
+        configuration.reader.client = self
+        configuration.reader.prepare()
+        opensCompleted = 0
+        writers = [Writer]()
+    }
+
+    // MARK: Private
+
+    private func createStreams() -> Bool {
+        var iStream: NSInputStream?
+        var oStream: NSOutputStream?
+        NSStream.getStreamsToHostWithName(host(), port: port(), inputStream: &iStream, outputStream: &oStream)
+
+        if iStream != nil && oStream != nil {
+            inputStream = iStream!
+            outputStream = oStream!
+            inputStream.delegate = self
+            outputStream.delegate = self
+            return true
+        } else {
+            return false
+        }
+    }
+
+    private func openStreams() {
+        let runLoop = NSRunLoop.currentRunLoop()
+        let mode = NSDefaultRunLoopMode
+        inputStream.scheduleInRunLoop(runLoop, forMode: mode)
+        outputStream.scheduleInRunLoop(runLoop, forMode: mode)
+        inputStream.open()
+        outputStream.open()
     }
 
     private func read() {
@@ -179,10 +202,6 @@ public class TCPClient: NSObject, NSStreamDelegate {
                 }
             }
         }
-    }
-
-    func didConnect() {
-        delegate?.tcpClientDidConnect?(self)
     }
 
 }

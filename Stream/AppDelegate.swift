@@ -25,18 +25,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
             client.write(DataWriter(data: data, delimiter: LineDelimiter.CRLF))
         }
 
-        client = TCPClient(host: "127.0.0.1", port: 9000, configuration: TCPClientConfiguration(reader: reader))
+        client = TCPClient(url: NSURL(string: "http://127.0.0.1:9000")!, configuration: TCPClientConfiguration(reader: reader))
         client.delegate = self
 
         client.connect()
-
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
-            sleep(10)
-
-            dispatch_async(dispatch_get_main_queue(), {
-                self.client.write(DataWriter(data: NSData(), delimiter: LineDelimiter.CRLF))
-            })
-        })
 
         return true
     }
