@@ -20,22 +20,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
 
-        let reader = LineReader()
-        reader.dataCallbackBlock = { client, data in
-            client.write(DataWriter(data: data, delimiter: LineDelimiter.CRLF))
+        if let url = NSURL(string: "http://127.0.0.1:9000") {
+            let reader = LineReader()
+            reader.dataCallbackBlock = { client, data in
+                client.write(DataWriter(data: data, delimiter: LineDelimiter.CRLF))
+            }
+
+            client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
+            client.delegate = self
+            client.connect()
         }
-
-        client = TCPClient(url: NSURL(string: "http://127.0.0.1:9000")!, configuration: TCPClientConfiguration(reader: reader))
-        client.delegate = self
-
-        client.connect()
 
         return true
     }
 
     func tcpClientDidConnect(client: TCPClient) {
         println("client did connect")
-        client.write(StringWriter(string: "Hello, world!")!)
+
+        if let string = StringWriter(string: "Hello, world!") {
+            client.write(string)
+        }
     }
 
     func tcpClientDidDisconnectWithError(client: TCPClient, streamError: NSError?) {
