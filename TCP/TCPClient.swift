@@ -90,10 +90,6 @@ public class TCPClient: NSObject, NSStreamDelegate {
         }
     }
 
-    public func writeData(data: NSData) {
-        write(DataWriter(data: data))
-    }
-
     // MARK: NSStreamDelegate methods
 
     public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {

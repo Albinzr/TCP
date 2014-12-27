@@ -26,13 +26,33 @@ import Foundation
 
 public class StringWriter: DataWriter {
 
-    public convenience init?(string: String, encoding: NSStringEncoding) {
-        if let data = string.dataUsingEncoding(encoding, allowLossyConversion: true) {
-            self.init(data: data)
+    public convenience init?(string: String, encoding: NSStringEncoding, allowLossyConversion: Bool, delimiter: LineDelimiter) {
+        if let data = string.dataUsingEncoding(encoding, allowLossyConversion: allowLossyConversion) {
+            self.init(data: data, delimiter: delimiter)
         } else {
             self.init(data: NSData())
             return nil
         }
+    }
+
+    public convenience init?(string: String, encoding: NSStringEncoding, allowLossyConversion: Bool) {
+        self.init(string: string, encoding: encoding, allowLossyConversion: false, delimiter: LineDelimiter.CRLF)
+    }
+
+    public convenience init?(string: String, encoding: NSStringEncoding, delimiter: LineDelimiter) {
+        self.init(string: string, encoding: encoding, allowLossyConversion: false, delimiter: delimiter)
+    }
+
+    public convenience init?(string: String, encoding: NSStringEncoding) {
+        self.init(string: string, encoding: encoding, delimiter: LineDelimiter.CRLF)
+    }
+
+    public convenience init?(string: String, delimiter: LineDelimiter) {
+        self.init(string: string, encoding: NSUTF8StringEncoding, delimiter: delimiter)
+    }
+
+    public convenience init?(string: String) {
+        self.init(string: string, delimiter: LineDelimiter.CRLF)
     }
 
 }

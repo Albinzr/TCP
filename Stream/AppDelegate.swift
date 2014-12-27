@@ -35,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
 
     func tcpClientDidConnect(client: TCPClient) {
         println("client did connect")
+        client.write(StringWriter(string: "Hello, world!")!)
     }
 
     func tcpClientDidDisconnectWithError(client: TCPClient, streamError: NSError?) {
