@@ -7,7 +7,8 @@ A simple TCP client for iOS written in Swift.
 
 1. Learn swift by doing something real and useful.
 2. Make it simple and easily extensible.
-3. Eventually: try to make it fast, and add websocket support.
+3. Try to make it fast.
+4. Websocket?
 
 # Current Todos:
 
