@@ -24,40 +24,40 @@ THE SOFTWARE.
 
 import Foundation
 
-public class URLWriter: DataWriter {
+public class URLRequestWriter: DataWriter {
 
     var url: NSURLRequest!
 
-    public convenience init(urlRequest: NSURLRequest) {
+    public convenience init(request: NSURLRequest) {
 
         var method = "GET"
 
-        if let urlMethod = urlRequest.HTTPMethod {
+        if let urlMethod = request.HTTPMethod {
             method = urlMethod
         }
 
-        let request = CFHTTPMessageCreateRequest(nil, method, urlRequest.URL, kCFHTTPVersion1_1).takeUnretainedValue()
+        let cfRequest = CFHTTPMessageCreateRequest(nil, method, request.URL, kCFHTTPVersion1_1).takeUnretainedValue()
 
         var host = ""
 
-        if let address = urlRequest.URL.host {
-            if let port = urlRequest.URL.port {
+        if let address = request.URL.host {
+            if let port = request.URL.port {
                 host = "\(address):\(port)"
             } else {
                 host = address
             }
         }
 
-        CFHTTPMessageSetHeaderFieldValue(request, "Host", host)
+        CFHTTPMessageSetHeaderFieldValue(cfRequest, "Host", host)
 
-        if let headers = urlRequest.allHTTPHeaderFields {
+        if let headers = request.allHTTPHeaderFields {
             for (field, value) in headers {
-                CFHTTPMessageSetHeaderFieldValue(request, field as String, value as String)
+                CFHTTPMessageSetHeaderFieldValue(cfRequest, field as String, value as String)
             }
         }
 
-        self.init(data: CFHTTPMessageCopySerializedMessage(request).takeUnretainedValue())
-        url = urlRequest
+        self.init(data: CFHTTPMessageCopySerializedMessage(cfRequest).takeUnretainedValue())
+        url = request
     }
 
 }

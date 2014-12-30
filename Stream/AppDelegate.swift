@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
             client.connect()
 
             let get = NSURLRequest(URL: url)
-            client.write(URLWriter(urlRequest: get))
+            client.write(URLRequestWriter(request: get))
         }
 
         return true
