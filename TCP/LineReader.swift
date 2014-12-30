@@ -55,14 +55,14 @@ public extension LineDelimiter {
 
 public class LineReader: SimpleReader {
 
-    public var data: NSMutableData!
+    public var buffer: NSMutableData!
     public var lineDelimiter = LineDelimiter.CRLF
     public var lineDelimiterData: NSData!
     public var stringEncoding = NSUTF8StringEncoding
     public var stringCallbackBlock: ((client: TCPClient!, string: String) -> ())!
 
     public override func prepare() {
-        data = NSMutableData()
+        buffer = NSMutableData()
         lineDelimiterData = lineDelimiter.lineData
     }
 
@@ -70,19 +70,23 @@ public class LineReader: SimpleReader {
         var searchRange = NSMakeRange(0, data.length)
 
         while searchRange.location < data.length {
-            let range = data.rangeOfData(lineDelimiterData, options: NSDataSearchOptions(rawValue: 0), range: searchRange)
+            let rangeOfLineDelimiter = data.rangeOfData(lineDelimiterData, options: NSDataSearchOptions(rawValue: 0), range: searchRange)
 
-            if range.location == NSNotFound {
-                self.data.appendData(data)
+            if rangeOfLineDelimiter.location == NSNotFound {
+                buffer.appendBytes(data.bytes + searchRange.location, length: searchRange.length)
+                break
             } else {
+                let location = searchRange.location
+                let length = rangeOfLineDelimiter.location - location
+
                 if callbackQueue != nil && (stringCallbackBlock != nil || dataCallbackBlock != nil) {
-                    let lineData = NSData(bytes: data.bytes + searchRange.location, length: range.location - searchRange.location)
+                    let lineData = NSData(bytes: data.bytes + location, length: length)
                     var allLineData: NSData! = nil
 
-                    if self.data.length > 0 {
-                        self.data.appendData(lineData)
-                        allLineData = self.data as NSData
-                        self.data = NSMutableData()
+                    if buffer.length > 0 {
+                        buffer.appendData(lineData)
+                        allLineData = buffer
+                        buffer = NSMutableData()
                     } else {
                         allLineData = lineData
                     }
@@ -101,10 +105,10 @@ public class LineReader: SimpleReader {
                 }
             }
 
-            let seek = range.location + range.length
-            searchRange.location += seek
-            searchRange.length -= seek
+            let offset = rangeOfLineDelimiter.location + rangeOfLineDelimiter.length
+            searchRange.location = offset
+            searchRange.length = data.length - offset
         }
     }
-
+    
 }

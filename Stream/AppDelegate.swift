@@ -20,20 +20,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
 
-        if let url = NSURL(string: "https://173.194.68.139:443") {
+        if let url = NSURL(string: "http://stackoverflow.com:80") {
             let reader = LineReader()
-            reader.dataCallbackBlock = { client, data in
-                client.write(DataWriter(data: data, delimiter: LineDelimiter.CRLF))
+            reader.stringCallbackBlock = { client, string in
+                println(string)
             }
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
-            client.secure = true
             client.connect()
 
-            if let string = StringWriter(string: "Hello, world! 1") {
-                client.write(string)
-            }
+            let get = NSURLRequest(URL: url)
+            client.write(URLWriter(urlRequest: get))
         }
 
         return true
@@ -41,10 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
 
     func tcpClientDidConnect(client: TCPClient) {
         println("client did connect")
-
-        if let string = StringWriter(string: "Hello, world! 2") {
-            client.write(string)
-        }
     }
 
     func tcpClientDidDisconnectWithError(client: TCPClient, streamError: NSError?) {
