@@ -32,6 +32,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public private(set) var open = false
     public var secure = false
     public var allowInvalidCertificates = false
+    lazy private var queue = dispatch_queue_create("com.smd.tcp.tcpClientQueue", DISPATCH_QUEUE_SERIAL)
 
     var inputStream: NSInputStream!
     var outputStream: NSOutputStream!
@@ -95,7 +96,9 @@ public class TCPClient: NSObject, NSStreamDelegate {
                 didConnect()
             }
         case NSStreamEvent.HasBytesAvailable:
-            read()
+            dispatch_async(queue, { () -> Void in
+                self.read()
+            })
         case NSStreamEvent.HasSpaceAvailable:
             write()
         case NSStreamEvent.ErrorOccurred:
@@ -189,21 +192,23 @@ public class TCPClient: NSObject, NSStreamDelegate {
 
     private func write() {
         if open {
-            while writers.count > 0 && outputStream.hasSpaceAvailable {
-                let writer = writers[0]
-                let (complete, bytesWritten) = writer.writeToStream(outputStream)
+            dispatch_async(queue, {
+                while self.writers.count > 0 && self.outputStream.hasSpaceAvailable {
+                    let writer = self.writers[0]
+                    let (complete, bytesWritten) = writer.writeToStream(self.outputStream)
 
-                // TODO: Figure out interaction here with the stream event handler.
-                // Just break and print errno for now
-                if bytesWritten <= 0 {
-                    println("error \(errno)")
-                    break
-                }
+                    // TODO: Figure out interaction here with the stream event handler.
+                    // Just break and print errno for now
+                    if bytesWritten <= 0 {
+                        println("error \(errno)")
+                        break
+                    }
 
-                if complete {
-                    writers.removeAtIndex(0)
+                    if complete {
+                        self.writers.removeAtIndex(0)
+                    }
                 }
-            }
+            })
         }
     }
 
