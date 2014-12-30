@@ -31,6 +31,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public private(set) var configuration: TCPClientConfiguration
     public private(set) var open = false
     public var secure = false
+    public var allowInvalidCertificates = false
 
     var inputStream: NSInputStream!
     var outputStream: NSOutputStream!
@@ -130,6 +131,14 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public func configureStreams() -> Bool {
         if secure {
             outputStream.setProperty(kCFStreamSocketSecurityLevelNegotiatedSSL, forKey: kCFStreamPropertySocketSecurityLevel)
+
+            var sslOptions = [String:AnyObject]()
+
+            if allowInvalidCertificates {
+                sslOptions[kCFStreamSSLValidatesCertificateChain as String] = false
+            }
+
+            outputStream.setProperty(sslOptions, forKey: kCFStreamPropertySSLSettings)
         }
 
         return true
