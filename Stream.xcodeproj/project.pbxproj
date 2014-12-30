@@ -25,6 +25,7 @@
 		1E9EF41E1A4E385000EF2B28 /* TCPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9EF41D1A4E385000EF2B28 /* TCPTests.swift */; };
 		1E9EF4211A4E385000EF2B28 /* TCP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9EF40A1A4E385000EF2B28 /* TCP.framework */; };
 		1E9EF4221A4E385000EF2B28 /* TCP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9EF40A1A4E385000EF2B28 /* TCP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EA930CB1A523871004D2A58 /* URLWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA930CA1A523871004D2A58 /* URLWriter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		1E9EF4141A4E385000EF2B28 /* TCPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9EF41C1A4E385000EF2B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E9EF41D1A4E385000EF2B28 /* TCPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPTests.swift; sourceTree = "<group>"; };
+		1EA930CA1A523871004D2A58 /* URLWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLWriter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				1E6222931A4E391500699864 /* Writer.swift */,
 				1E62228D1A4E391500699864 /* DataWriter.swift */,
 				1E6222941A4E391500699864 /* StringWriter.swift */,
+				1EA930CA1A523871004D2A58 /* URLWriter.swift */,
 			);
 			name = Writers;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				1E6222A31A4E414800699864 /* TCPClientDelegate.swift in Sources */,
 				1E6222981A4E391500699864 /* LineReader.swift in Sources */,
 				1E6222991A4E391500699864 /* SimpleReader.swift in Sources */,
+				1EA930CB1A523871004D2A58 /* URLWriter.swift in Sources */,
 				1E62229D1A4E391500699864 /* StringWriter.swift in Sources */,
 				1E62229C1A4E391500699864 /* Writer.swift in Sources */,
 				1E6222961A4E391500699864 /* DataWriter.swift in Sources */,
