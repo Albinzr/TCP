@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
 
-        if let url = NSURL(string: "http://127.0.0.1:9000") {
+        if let url = NSURL(string: "https://173.194.68.139:443") {
             let reader = LineReader()
             reader.dataCallbackBlock = { client, data in
                 client.write(DataWriter(data: data, delimiter: LineDelimiter.CRLF))
@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
+            client.secure = true
             client.connect()
 
             if let string = StringWriter(string: "Hello, world! 1") {
