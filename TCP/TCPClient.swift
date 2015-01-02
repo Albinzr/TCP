@@ -85,6 +85,14 @@ public class TCPClient: NSObject, NSStreamDelegate {
         }
     }
 
+    public func write(data: NSData) {
+        write(DataWriter(data: data))
+    }
+
+    public func write(data: NSData, delimiter: LineDelimiter) {
+        write(DataWriter(data: data, delimiter: delimiter))
+    }
+
     // MARK: NSStreamDelegate methods
 
     public func stream(aStream: NSStream, handleEvent eventCode: NSStreamEvent) {
