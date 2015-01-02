@@ -197,15 +197,14 @@ public class TCPClient: NSObject, NSStreamDelegate {
                     let writer = self.writers[0]
                     let (complete, bytesWritten) = writer.writeToStream(self.outputStream)
 
-                    // TODO: Figure out interaction here with the stream event handler.
-                    // Just break and print errno for now
-                    if bytesWritten <= 0 {
-                        println("error \(errno)")
-                        break
-                    }
-
                     if complete {
                         self.writers.removeAtIndex(0)
+                    } else if bytesWritten <= 0 {
+                        // TODO: Figure out interaction here with the stream event handler.
+                        // Just break and print errno for now
+                        let error = NSError(domain: NSPOSIXErrorDomain, code: Int(errno), userInfo: [:])
+                        println(error)
+                        break
                     }
                 }
             })
