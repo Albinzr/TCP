@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
 
-        if let url = NSURL(string: "http://stackoverflow.com:80") {
+        if let url = NSURL(string: "http://127.0.0.1:9000") {
             let reader = LineReader()
             reader.stringCallbackBlock = { client, string in
                 println(string)
@@ -31,7 +31,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
             client.connect()
 
             let get = NSURLRequest(URL: url)
-            client.write(URLRequestWriter(request: get))
+
+            if let fileUrl = NSBundle.mainBundle().URLForResource("testfile", withExtension: "txt") {
+                if let file = FileWriter(filePath: fileUrl) {
+                    client.write(file)
+                }
+            }
         }
 
         return true

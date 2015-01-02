@@ -25,6 +25,8 @@
 		1E9EF41E1A4E385000EF2B28 /* TCPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9EF41D1A4E385000EF2B28 /* TCPTests.swift */; };
 		1E9EF4211A4E385000EF2B28 /* TCP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9EF40A1A4E385000EF2B28 /* TCP.framework */; };
 		1E9EF4221A4E385000EF2B28 /* TCP.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1E9EF40A1A4E385000EF2B28 /* TCP.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EA5C2A01A56017400C1F2BD /* FileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA5C29F1A56017400C1F2BD /* FileWriter.swift */; };
+		1EA5C2A51A56154400C1F2BD /* testfile.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1EA5C2A41A56154400C1F2BD /* testfile.txt */; };
 		1EA930CB1A523871004D2A58 /* URLRequestWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA930CA1A523871004D2A58 /* URLRequestWriter.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +90,8 @@
 		1E9EF4141A4E385000EF2B28 /* TCPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TCPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E9EF41C1A4E385000EF2B28 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1E9EF41D1A4E385000EF2B28 /* TCPTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCPTests.swift; sourceTree = "<group>"; };
+		1EA5C29F1A56017400C1F2BD /* FileWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWriter.swift; sourceTree = "<group>"; };
+		1EA5C2A41A56154400C1F2BD /* testfile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = testfile.txt; path = Resources/testfile.txt; sourceTree = "<group>"; };
 		1EA930CA1A523871004D2A58 /* URLRequestWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestWriter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,6 +148,7 @@
 				1E6222931A4E391500699864 /* Writer.swift */,
 				1E62228D1A4E391500699864 /* DataWriter.swift */,
 				1E6222941A4E391500699864 /* StringWriter.swift */,
+				1EA5C29F1A56017400C1F2BD /* FileWriter.swift */,
 				1EA930CA1A523871004D2A58 /* URLRequestWriter.swift */,
 			);
 			name = Writers;
@@ -176,6 +181,7 @@
 				1E9EF3E71A4E381F00EF2B28 /* ViewController.swift */,
 				1E9EF3EC1A4E381F00EF2B28 /* Images.xcassets */,
 				1E9EF3EE1A4E381F00EF2B28 /* LaunchScreen.xib */,
+				1EA5C2A31A56152D00C1F2BD /* Resources */,
 				1E9EF3E31A4E381F00EF2B28 /* Supporting Files */,
 			);
 			path = Stream;
@@ -224,6 +230,14 @@
 				1E9EF41C1A4E385000EF2B28 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1EA5C2A31A56152D00C1F2BD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1EA5C2A41A56154400C1F2BD /* testfile.txt */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -342,6 +356,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EA5C2A51A56154400C1F2BD /* testfile.txt in Resources */,
 				1E9EF3F01A4E381F00EF2B28 /* LaunchScreen.xib in Resources */,
 				1E9EF3ED1A4E381F00EF2B28 /* Images.xcassets in Resources */,
 			);
@@ -381,6 +396,7 @@
 				1E62229B1A4E391500699864 /* Reader.swift in Sources */,
 				1E6222971A4E391500699864 /* TCPClientConfiguration.swift in Sources */,
 				1E6222A31A4E414800699864 /* TCPClientDelegate.swift in Sources */,
+				1EA5C2A01A56017400C1F2BD /* FileWriter.swift in Sources */,
 				1E6222981A4E391500699864 /* LineReader.swift in Sources */,
 				1E6222991A4E391500699864 /* SimpleReader.swift in Sources */,
 				1EA930CB1A523871004D2A58 /* URLRequestWriter.swift in Sources */,
