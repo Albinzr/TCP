@@ -29,14 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
             client.connect()
-
-            let get = NSURLRequest(URL: url)
-
-            if let fileUrl = NSBundle.mainBundle().URLForResource("testfile", withExtension: "txt") {
-                if let file = FileWriter(filePath: fileUrl) {
-                    client.write(file)
-                }
-            }
         }
 
         return true
