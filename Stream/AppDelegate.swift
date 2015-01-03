@@ -19,19 +19,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
+        test()
+        return true
+    }
 
+    func test() {
         if let url = NSURL(string: "http://127.0.0.1:9000") {
             let reader = LineReader()
             reader.stringCallbackBlock = { client, string in
-                println(string)
+                client.write(StringWriter(string: string)!)
             }
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
             client.connect()
         }
-
-        return true
     }
 
     func tcpClientDidConnect(client: TCPClient) {
