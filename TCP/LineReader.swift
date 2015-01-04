@@ -74,7 +74,6 @@ public class LineReader: SimpleReader {
 
             if rangeOfLineDelimiter.location == NSNotFound {
                 buffer.appendBytes(data.bytes + searchRange.location, length: searchRange.length)
-                break
             } else {
                 let location = searchRange.location
                 let length = rangeOfLineDelimiter.location - location
