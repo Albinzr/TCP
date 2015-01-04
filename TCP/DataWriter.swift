@@ -26,9 +26,10 @@ import Foundation
 
 public class DataWriter: Writer {
 
-    public var cursor: Int = 0
-    public var data: NSData
-
+    public var streaming = false
+    private var cursor: Int = 0
+    private var data: NSData
+    private var fillBuffer = true
 
     public init(data: NSData) {
         self.data = data
@@ -44,15 +45,56 @@ public class DataWriter: Writer {
         self.init(data: mData)
     }
 
-    public func writeToStream(stream: NSOutputStream) -> (complete: Bool, bytesWritten: Int) {
-        let bytesLeft = data.length - self.cursor
-        let bytesWritten = stream.write(UnsafeMutablePointer<UInt8>(data.bytes) + cursor, maxLength: bytesLeft)
+    public func writeToStream(stream: NSOutputStream) -> (complete: Bool, error: NSError?) {
+        var error: NSError?
 
-        if bytesWritten > 0 {
-            cursor += bytesWritten
+        if streaming && fillBuffer {
+            fillBuffer = false
+            let (fd, fillError) = nextDataChunk()
+
+            if let fillData = fd {
+                data = fillData
+            } else {
+                data = NSData()
+            }
+
+            error = fillError
+            cursor = 0
         }
 
-        return (cursor == data.length, bytesWritten)
+        let bytesLeft = data.length - self.cursor
+        var complete = false
+        var bytesWritten = 0
+
+        if error == nil && bytesLeft > 0 {
+            bytesWritten = stream.write(UnsafeMutablePointer<UInt8>(data.bytes) + cursor, maxLength: bytesLeft)
+
+            if bytesWritten > 0 {
+                cursor += bytesWritten
+            } else {
+                error = posixErrorFromErrno()
+            }
+
+            if cursor == data.length {
+                if streaming {
+                    fillBuffer = true
+                } else {
+                    complete = true
+                }
+            }
+        } else {
+            complete = true
+        }
+
+        return (complete, error)
+    }
+
+    public func setStreaming(streaming: Bool) {
+
+    }
+
+    public func nextDataChunk() -> (nextData: NSData?, error: NSError?) {
+        return (nil, nil)
     }
 
 }

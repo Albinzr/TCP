@@ -24,8 +24,19 @@ THE SOFTWARE.
 
 import Foundation
 
+public func posixErrorFromErrno() -> NSError? {
+    var error: NSError?
+    let errorCode = Int(errno)
+
+    if errorCode > 0 {
+        error = NSError(domain: NSPOSIXErrorDomain, code: errorCode, userInfo: nil)
+    }
+
+    return error
+}
+
 public protocol Writer {
 
-    func writeToStream(stream: NSOutputStream) -> (complete: Bool, bytesWritten: Int)
+    func writeToStream(stream: NSOutputStream) -> (complete: Bool, error: NSError?)
 
 }

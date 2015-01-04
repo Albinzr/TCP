@@ -203,15 +203,16 @@ public class TCPClient: NSObject, NSStreamDelegate {
             dispatch_async(queue, {
                 while self.writers.count > 0 && self.outputStream.hasSpaceAvailable {
                     let writer = self.writers[0]
-                    let (complete, bytesWritten) = writer.writeToStream(self.outputStream)
+                    let (complete, error) = writer.writeToStream(self.outputStream)
 
                     if complete {
                         self.writers.removeAtIndex(0)
-                    } else if bytesWritten <= 0 {
+                    }
+
+                    if let e = error {
                         // TODO: Figure out interaction here with the stream event handler.
                         // Just break and print errno for now
-                        let error = NSError(domain: NSPOSIXErrorDomain, code: Int(errno), userInfo: [:])
-                        println(error)
+                        println(e)
                         break
                     }
                 }

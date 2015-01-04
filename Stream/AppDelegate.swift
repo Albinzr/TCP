@@ -27,7 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         if let url = NSURL(string: "http://127.0.0.1:9000") {
             let reader = LineReader()
             reader.stringCallbackBlock = { client, string in
-                client.write(StringWriter(string: string)!)
+                client.write(FileWriter(filePath: NSBundle.mainBundle().URLForResource("testfile", withExtension: "txt")!)!)
             }
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
