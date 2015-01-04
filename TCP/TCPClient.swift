@@ -47,6 +47,8 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func connect() -> Bool {
+        objc_sync_enter(self)
+        
         var success = false
 
         if !open && createStreams() && configureStreams() {
@@ -60,10 +62,14 @@ public class TCPClient: NSObject, NSStreamDelegate {
             disconnect()
         }
 
+        objc_sync_exit(self)
+
         return success
     }
 
     public func disconnect() {
+        objc_sync_enter(self)
+
         if open {
             inputStream.delegate = nil
             outputStream.delegate = nil
@@ -74,6 +80,8 @@ public class TCPClient: NSObject, NSStreamDelegate {
             open = false
             writers.removeAll(keepCapacity: false)
         }
+
+        objc_sync_exit(self)
     }
 
     // MARK: Writing
