@@ -3,7 +3,7 @@
 //  TCPTests
 //
 //  Created by Cameron Pulsford on 12/26/14.
-//  Copyright (c) 2014 SMD. All rights reserved.
+//  Copyright (c) 2015 SMD. All rights reserved.
 //
 
 import UIKit
