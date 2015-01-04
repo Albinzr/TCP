@@ -79,6 +79,8 @@ public class LineReader: SimpleReader {
                 let location = searchRange.location
                 let length = rangeOfLineDelimiter.location - location
 
+                let callbackQueue = client.delegateQueue
+                
                 if callbackQueue != nil && (stringCallbackBlock != nil || dataCallbackBlock != nil) {
                     let lineData = NSData(bytes: data.bytes + location, length: length)
                     var allLineData: NSData! = nil
