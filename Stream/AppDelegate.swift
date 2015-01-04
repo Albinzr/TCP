@@ -19,20 +19,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         window?.rootViewController = ViewController()
         window?.makeKeyAndVisible()
-        test()
+        echo()
         return true
     }
 
-    func test() {
+    func echo() {
         if let url = NSURL(string: "http://127.0.0.1:9000") {
-            let reader = LineReader()
-            reader.stringCallbackBlock = { client, string in
-                client.write(FileWriter(filePath: NSBundle.mainBundle().URLForResource("testfile", withExtension: "txt")!)!)
-                client.write(StringWriter(string: string)!)
+            let reader = SimpleReader()
+            reader.dataCallbackBlock = { client, data in
+                client.write(data)
             }
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
-            client.delegate = self
             client.connect()
         }
     }
