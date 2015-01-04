@@ -24,14 +24,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
     }
 
     func echo() {
-        if let url = NSURL(string: "http://127.0.0.1:9000") {
-            let reader = SimpleReader()
-            reader.dataCallbackBlock = { client, data in
-                client.write(data)
+        if let url = NSURL(string: "https://www.google.com") {
+            let reader = LineReader()
+            reader.stringCallbackBlock = { client, string in
+                println(string)
             }
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
+            client.delegate = self
+            client.secure = true
             client.connect()
+
+            client.write(URLRequestWriter(request: NSURLRequest(URL: url)))
         }
     }
 

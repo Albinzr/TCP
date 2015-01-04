@@ -70,8 +70,10 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public func disconnect() {
         objc_sync_enter(self)
 
-        dispatch_sync(workQueue) {
-            if self.open {
+        if open {
+            open = false
+            
+            dispatch_async(workQueue) {
                 self.inputStream.delegate = nil
                 self.outputStream.delegate = nil
                 self.inputStream.close()
@@ -139,7 +141,22 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func port() -> Int {
-        return url.port!.integerValue
+        var port: Int = 0
+
+        if let p = url.port {
+            port = p.integerValue
+        } else if let scheme = url.scheme {
+            switch scheme {
+            case "http":
+                port = 80
+            case "https":
+                port = 443
+            default:
+                break
+            }
+        }
+
+        return port
     }
 
     public func didConnect() {
