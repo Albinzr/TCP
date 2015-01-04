@@ -27,12 +27,13 @@ import Foundation
 public class TCPClient: NSObject, NSStreamDelegate {
 
     public weak var delegate: TCPClientDelegate?
+    lazy public var delegateQueue = dispatch_get_main_queue()
     public private(set) var url: NSURL
     public private(set) var configuration: TCPClientConfiguration
     public private(set) var open = false
     public var secure = false
     public var allowInvalidCertificates = false
-    lazy private var queue = dispatch_queue_create("com.smd.tcp.tcpClientQueue", DISPATCH_QUEUE_SERIAL)
+    lazy private var workQueue = dispatch_queue_create("com.smd.tcp.tcpClientQueue", DISPATCH_QUEUE_SERIAL)
 
     var inputStream: NSInputStream!
     var outputStream: NSOutputStream!
@@ -104,17 +105,16 @@ public class TCPClient: NSObject, NSStreamDelegate {
                 didConnect()
             }
         case NSStreamEvent.HasBytesAvailable:
-            dispatch_async(queue, { () -> Void in
+            dispatch_async(workQueue) {
                 self.read()
-            })
+            }
         case NSStreamEvent.HasSpaceAvailable:
             write()
         case NSStreamEvent.ErrorOccurred:
             fallthrough
         case NSStreamEvent.EndEncountered:
             let error = aStream.streamError
-            disconnect()
-            didDisconnectWithError(error)
+            disconnectWithError(error)
         default:
             break
         }
@@ -131,12 +131,17 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     public func didConnect() {
-        delegate?.tcpClientDidConnect?(self)
+        dispatch_async(delegateQueue) {
+            var _ = self.delegate?.tcpClientDidConnect?(self)
+        }
+
         write()
     }
 
     public func didDisconnectWithError(error: NSError?) {
-        delegate?.tcpClientDidDisconnectWithError?(self, streamError: error)
+        dispatch_async(delegateQueue) {
+            var _ = self.delegate?.tcpClientDidDisconnectWithError?(self, streamError: error)
+        }
     }
 
     public func configureStreams() -> Bool {
@@ -163,6 +168,11 @@ public class TCPClient: NSObject, NSStreamDelegate {
     }
 
     // MARK: Private
+
+    private func disconnectWithError(error: NSError?) {
+        disconnect()
+        didDisconnectWithError(error)
+    }
 
     private func createStreams() -> Bool {
         var iStream: NSInputStream?
@@ -200,7 +210,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
 
     private func write() {
         if open {
-            dispatch_async(queue, {
+            dispatch_async(workQueue) {
                 while self.writers.count > 0 && self.outputStream.hasSpaceAvailable {
                     let writer = self.writers[0]
                     let (complete, error) = writer.writeToStream(self.outputStream)
@@ -210,13 +220,11 @@ public class TCPClient: NSObject, NSStreamDelegate {
                     }
 
                     if let e = error {
-                        // TODO: Figure out interaction here with the stream event handler.
-                        // Just break and print errno for now
-                        println(e)
+                        self.disconnectWithError(e)
                         break
                     }
                 }
-            })
+            }
         }
     }
 

@@ -93,14 +93,14 @@ public class LineReader: SimpleReader {
 
                     if stringCallbackBlock != nil {
                         if let string = NSString(data: allLineData, encoding: self.stringEncoding) {
-                            dispatch_async(callbackQueue, {
+                            dispatch_async(callbackQueue) {
                                 self.stringCallbackBlock(client: self.client, string: string)
-                            })
+                            }
                         }
                     } else {
-                        dispatch_async(callbackQueue, {
+                        dispatch_async(callbackQueue) {
                             self.dataCallbackBlock(client: self.client, data: allLineData)
-                        })
+                        }
                     }
                 }
             }

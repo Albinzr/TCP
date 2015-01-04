@@ -40,9 +40,9 @@ public class SimpleReader: Reader {
 
     public func handleData(data: NSData) {
         if callbackQueue != nil && dataCallbackBlock != nil{
-            dispatch_async(callbackQueue, {
+            dispatch_async(callbackQueue) {
                 self.dataCallbackBlock(client: self.client, data: data)
-            })
+            }
         }
     }
 

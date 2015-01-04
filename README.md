@@ -13,5 +13,6 @@ A simple TCP client for iOS written in Swift.
 # Current Todos:
 
 1. Documentation.. :-)
-2. Optimize line delimiter writing.
-3. Optimize writes in general by writing fewer and larger chunks, while maintaining the current <code>Writer</code> paradigm.
+2. Unify reader and TCPDelegate callback queues.
+3. Optimize line delimiter writing.
+4. Optimize writes in general by writing fewer and larger chunks, while maintaining the current <code>Writer</code> paradigm.
