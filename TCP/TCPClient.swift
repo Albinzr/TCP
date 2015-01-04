@@ -70,15 +70,17 @@ public class TCPClient: NSObject, NSStreamDelegate {
     public func disconnect() {
         objc_sync_enter(self)
 
-        if open {
-            inputStream.delegate = nil
-            outputStream.delegate = nil
-            inputStream.close()
-            outputStream.close()
-            inputStream = nil
-            outputStream = nil
-            open = false
-            writers.removeAll(keepCapacity: false)
+        dispatch_sync(workQueue) {
+            if self.open {
+                self.inputStream.delegate = nil
+                self.outputStream.delegate = nil
+                self.inputStream.close()
+                self.outputStream.close()
+                self.inputStream = nil
+                self.outputStream = nil
+                self.open = false
+                self.writers.removeAll(keepCapacity: false)
+            }
         }
 
         objc_sync_exit(self)
@@ -87,10 +89,12 @@ public class TCPClient: NSObject, NSStreamDelegate {
     // MARK: Writing
 
     public func write(writer: Writer) {
-        writers.append(writer)
+        dispatch_async(workQueue) {
+            self.writers.append(writer)
 
-        if open {
-            write()
+            if self.open {
+                self.write()
+            }
         }
     }
 
@@ -117,7 +121,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
                 self.read()
             }
         case NSStreamEvent.HasSpaceAvailable:
-            write()
+            writeInBackground()
         case NSStreamEvent.ErrorOccurred:
             fallthrough
         case NSStreamEvent.EndEncountered:
@@ -143,7 +147,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
             var _ = self.delegate?.tcpClientDidConnect?(self)
         }
 
-        write()
+        writeInBackground()
     }
 
     public func didDisconnectWithError(error: NSError?) {
@@ -216,22 +220,24 @@ public class TCPClient: NSObject, NSStreamDelegate {
         }
     }
 
+    private func writeInBackground() {
+        dispatch_async(workQueue) {
+            self.write()
+        }
+    }
+
     private func write() {
-        if open {
-            dispatch_async(workQueue) {
-                while self.writers.count > 0 && self.outputStream.hasSpaceAvailable {
-                    let writer = self.writers[0]
-                    let (complete, error) = writer.writeToStream(self.outputStream)
+        while self.open && self.writers.count > 0 && self.outputStream.hasSpaceAvailable {
+            let writer = self.writers[0]
+            let (complete, error) = writer.writeToStream(self.outputStream)
 
-                    if complete {
-                        self.writers.removeAtIndex(0)
-                    }
+            if complete {
+                self.writers.removeAtIndex(0)
+            }
 
-                    if let e = error {
-                        self.disconnectWithError(e)
-                        break
-                    }
-                }
+            if let e = error {
+                self.disconnectWithError(e)
+                break
             }
         }
     }
