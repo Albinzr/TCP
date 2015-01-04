@@ -28,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
             let reader = LineReader()
             reader.stringCallbackBlock = { client, string in
                 client.write(FileWriter(filePath: NSBundle.mainBundle().URLForResource("testfile", withExtension: "txt")!)!)
+                client.write(StringWriter(string: string)!)
             }
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
