@@ -12,4 +12,4 @@ A simple TCP client for iOS written in Swift.
 
 # Current Todos:
 
-1. Optimize line delimiter writing.
+1. Profile and potentially optimize line delimiter writing.
