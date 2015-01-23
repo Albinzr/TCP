@@ -31,6 +31,13 @@ public class FileWriter: DataWriter {
     private var file: NSInputStream!
     private var attemptToFillBuffer = true
 
+    /**
+    Initializes a FileWriter.
+
+    :param: filePath The path of the file you would like to write.
+
+    :returns: An initialized FileWriter, or nil.
+    */
     public init?(filePath: NSURL) {
         url = filePath
         super.init(data: NSData())

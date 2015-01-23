@@ -28,8 +28,14 @@ public protocol Reader {
 
     weak var client: TCPClient! { set get }
 
+    /**
+    *  This method will be called just before a stream is opened for reading.
+    */
     func prepare()
 
+    /**
+    *  Parse the given data.
+    */
     func handleData(data: NSData)
 
 }

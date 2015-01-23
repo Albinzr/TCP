@@ -32,10 +32,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
 
             client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
-            client.secure = true
             client.connect()
 
             client.write(URLRequestWriter(request: NSURLRequest(URL: url)))
+            client.write(StringWriter(string: "hello")!)
         }
     }
 

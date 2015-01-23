@@ -24,42 +24,22 @@ THE SOFTWARE.
 
 import Foundation
 
-public enum LineDelimiter {
-    case None
-    case CR
-    case LF
-    case CRLF
-    case Custom(NSData)
-}
-
-public extension LineDelimiter {
-
-    public var lineData: NSData? {
-        get {
-            switch self {
-            case .None:
-                return nil
-            case .CR:
-                return NSData(bytes: "\r", length: 1)
-            case .LF:
-                return NSData(bytes: "\n", length: 1)
-            case .CRLF:
-                return NSData(bytes: "\r\n", length: 2)
-            case .Custom(let data):
-                return data
-            }
-        }
-    }
-
-}
-
+/**
+*  This Reader implementation will parse all received data by the given line delimiter and call either the stringCallbackBlock or dataCallbackBlock. If both are set, stringCallbackBlock will be preferred.
+*/
 public class LineReader: SimpleReader {
 
-    public var buffer: NSMutableData!
+    /// Set the desired LineDelimiter. The default is LineDelimiter.CRLF.
     public var lineDelimiter = LineDelimiter.CRLF
-    public var lineDelimiterData: NSData!
+
+    /// Set the desired NSStringEncoding. The default is NSUTF8StringEncoding.
     public var stringEncoding = NSUTF8StringEncoding
+
+    /// Set the stringCallbackBlock. This callback block will be preffered over the dataCallbackBlock if both are set.
     public var stringCallbackBlock: ((client: TCPClient!, string: String) -> ())!
+
+    public var buffer: NSMutableData!
+    public var lineDelimiterData: NSData!
 
     public override func prepare() {
         buffer = NSMutableData()

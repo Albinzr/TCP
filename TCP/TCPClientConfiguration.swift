@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 import Foundation
 
-public class TCPClientConfiguration {
+public class TCPClientConfiguration: NSObject, NSCopying {
 
     public var openTimeout = 60
     public var readSize = 4096
@@ -32,6 +32,13 @@ public class TCPClientConfiguration {
 
     public init(reader: Reader) {
         self.reader = reader
+    }
+
+    public func copyWithZone(zone: NSZone) -> AnyObject {
+        let configuration = TCPClientConfiguration(reader: reader)
+        configuration.openTimeout = openTimeout
+        configuration.readSize = readSize
+        return configuration
     }
 
 }

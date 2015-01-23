@@ -26,33 +26,23 @@ import Foundation
 
 public class StringWriter: DataWriter {
 
-    public convenience init?(string: String, encoding: NSStringEncoding, allowLossyConversion: Bool, delimiter: LineDelimiter) {
+    /**
+    Initializes a StringWriter.
+
+    :param: string               The string to write.
+    :param: encoding             The encoding to use to convert the string to NSData. The default is NSUTF8StringEncoding.
+    :param: allowLossyConversion true to allow lossy conversion of the string; otherwise, false. The default is false.
+    :param: delimiter            The LineDelimiter to write after the string. The default is LineDelimiter.CRLF.
+
+    :returns: An initialized StringWriter, or nil.
+    */
+    public convenience init?(string: String, encoding: NSStringEncoding = NSUTF8StringEncoding, allowLossyConversion: Bool = false, delimiter: LineDelimiter = LineDelimiter.CRLF) {
         if let data = string.dataUsingEncoding(encoding, allowLossyConversion: allowLossyConversion) {
             self.init(data: data, delimiter: delimiter)
         } else {
             self.init(data: NSData())
             return nil
         }
-    }
-
-    public convenience init?(string: String, encoding: NSStringEncoding, allowLossyConversion: Bool) {
-        self.init(string: string, encoding: encoding, allowLossyConversion: false, delimiter: LineDelimiter.CRLF)
-    }
-
-    public convenience init?(string: String, encoding: NSStringEncoding, delimiter: LineDelimiter) {
-        self.init(string: string, encoding: encoding, allowLossyConversion: false, delimiter: delimiter)
-    }
-
-    public convenience init?(string: String, encoding: NSStringEncoding) {
-        self.init(string: string, encoding: encoding, delimiter: LineDelimiter.CRLF)
-    }
-
-    public convenience init?(string: String, delimiter: LineDelimiter) {
-        self.init(string: string, encoding: NSUTF8StringEncoding, delimiter: delimiter)
-    }
-
-    public convenience init?(string: String) {
-        self.init(string: string, delimiter: LineDelimiter.CRLF)
     }
 
 }

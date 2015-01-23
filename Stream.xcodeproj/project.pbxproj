@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E566A111A72D3D6000A2073 /* LineDelimiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E566A101A72D3D6000A2073 /* LineDelimiter.swift */; };
 		1E6222961A4E391500699864 /* DataWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62228D1A4E391500699864 /* DataWriter.swift */; };
 		1E6222971A4E391500699864 /* TCPClientConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62228E1A4E391500699864 /* TCPClientConfiguration.swift */; };
 		1E6222981A4E391500699864 /* LineReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62228F1A4E391500699864 /* LineReader.swift */; };
@@ -69,6 +70,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1E566A101A72D3D6000A2073 /* LineDelimiter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineDelimiter.swift; sourceTree = "<group>"; };
 		1E62228D1A4E391500699864 /* DataWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataWriter.swift; sourceTree = "<group>"; };
 		1E62228E1A4E391500699864 /* TCPClientConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TCPClientConfiguration.swift; sourceTree = "<group>"; };
 		1E62228F1A4E391500699864 /* LineReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineReader.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 				1E6222A21A4E414800699864 /* TCPClientDelegate.swift */,
 				1E62228E1A4E391500699864 /* TCPClientConfiguration.swift */,
 				1E6222951A4E391500699864 /* TCPClient.swift */,
+				1E566A101A72D3D6000A2073 /* LineDelimiter.swift */,
 			);
 			name = Stream;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				1E6222991A4E391500699864 /* SimpleReader.swift in Sources */,
 				1EA930CB1A523871004D2A58 /* URLRequestWriter.swift in Sources */,
 				1E62229D1A4E391500699864 /* StringWriter.swift in Sources */,
+				1E566A111A72D3D6000A2073 /* LineDelimiter.swift in Sources */,
 				1E62229C1A4E391500699864 /* Writer.swift in Sources */,
 				1E6222961A4E391500699864 /* DataWriter.swift in Sources */,
 			);

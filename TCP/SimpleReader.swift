@@ -24,6 +24,9 @@ THE SOFTWARE.
 
 import Foundation
 
+/**
+*  This Reader implementation will call the dataCallbackBlock with all data it receives. No parsing is done at all.
+*/
 public class SimpleReader: Reader {
 
     public weak var client: TCPClient!

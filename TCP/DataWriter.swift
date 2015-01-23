@@ -26,15 +26,32 @@ import Foundation
 
 public class DataWriter: Writer {
 
+    /// This is a convenience property for subclasses that are based on stream based interfaces. See the nextDataChunk method's documentation for more information.
     public var streaming = false
+
     private var cursor: Int = 0
     private var data: NSData
     private var fillBuffer = true
 
+    /**
+    Initializes a Writer with the given data.
+
+    :param: data The data to write.
+
+    :returns: An initialized Writer.
+    */
     public init(data: NSData) {
         self.data = data
     }
 
+    /**
+    Initializes a Writer with the given data and LineDelimiter.
+
+    :param: data      The data to write.
+    :param: delimiter The LineDelimiter to write.
+
+    :returns: An initialized Writer.
+    */
     public convenience init(data: NSData, delimiter: LineDelimiter) {
         let mData = NSMutableData(data: data)
 
@@ -89,10 +106,11 @@ public class DataWriter: Writer {
         return (complete, error)
     }
 
-    public func setStreaming(streaming: Bool) {
+    /**
+    This method is only called when the streaming property is set to true. Return your next NSData chunk to write, or nil if you are complete. Additionally, return any errors that might occur. Returning an error will cause the connection to close. This method will be called repeatedly until either nil data is returned, or an error.
 
-    }
-
+    :returns: A tuple of the next data chunk to write, or any error that occured while reading the next piece of data.
+    */
     public func nextDataChunk() -> (nextData: NSData?, error: NSError?) {
         return (nil, nil)
     }

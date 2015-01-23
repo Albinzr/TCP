@@ -37,6 +37,9 @@ public func posixErrorFromErrno() -> NSError? {
 
 public protocol Writer {
 
+    /**
+    *  Attempt a _single_ write to the provided stream. Return true if you are done writing your data; otherwise, false if you need to continue. Additionally, return any errors that might occur. Returning an error will cause the connection to close. This method will be called repeatedly until either true is returned, or an error.
+    */
     func writeToStream(stream: NSOutputStream) -> (complete: Bool, error: NSError?)
 
 }

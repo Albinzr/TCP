@@ -28,6 +28,13 @@ public class URLRequestWriter: DataWriter {
 
     var url: NSURLRequest!
 
+    /**
+    Initializes a URLRequestWriter.
+
+    :param: request The NSURLRequest to write.
+
+    :returns: An initialized URLRequestWriter.
+    */
     public convenience init(request: NSURLRequest) {
 
         var method = "GET"
