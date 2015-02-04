@@ -24,15 +24,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
     }
 
     func echo() {
-        if let url = NSURL(string: "wss://10.0.1.200:9108") {
-            let reader = LineReader()
-            reader.stringCallbackBlock = { client, data in
-                println("'\(data)'")
+        if let url = NSURL(string: "http://10.5.226.3:9000") {
+            let reader = SimpleReader()
+            reader.dataCallbackBlock = { client, data in
+                client.write(data)
             }
 
-            client = WebsocketClient(url: url, configuration: TCPClientConfiguration(reader: reader), protocols: ["rpm-protocol"])
+            client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
             client.delegate = self
-            client.allowInvalidCertificates = true
             client.connect()
         }
     }
