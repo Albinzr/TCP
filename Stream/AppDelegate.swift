@@ -24,18 +24,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TCPClientDelegate {
     }
 
     func echo() {
-        if let url = NSURL(string: "https://www.google.com") {
+        if let url = NSURL(string: "wss://10.0.1.200:9108") {
             let reader = LineReader()
-            reader.stringCallbackBlock = { client, string in
-                println(string)
+            reader.stringCallbackBlock = { client, data in
+                println("'\(data)'")
             }
 
-            client = TCPClient(url: url, configuration: TCPClientConfiguration(reader: reader))
+            client = WebsocketClient(url: url, configuration: TCPClientConfiguration(reader: reader), protocols: ["rpm-protocol"])
             client.delegate = self
+            client.allowInvalidCertificates = true
             client.connect()
-
-            client.write(URLRequestWriter(request: NSURLRequest(URL: url)))
-            client.write(StringWriter(string: "hello")!)
         }
     }
 

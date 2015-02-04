@@ -29,6 +29,7 @@
 		1EA5C2A01A56017400C1F2BD /* FileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA5C29F1A56017400C1F2BD /* FileWriter.swift */; };
 		1EA5C2A51A56154400C1F2BD /* testfile.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1EA5C2A41A56154400C1F2BD /* testfile.txt */; };
 		1EA930CB1A523871004D2A58 /* URLRequestWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA930CA1A523871004D2A58 /* URLRequestWriter.swift */; };
+		1EAEEF001A81AA3200342DC5 /* WebsocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAEEEFF1A81AA3200342DC5 /* WebsocketClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +96,7 @@
 		1EA5C29F1A56017400C1F2BD /* FileWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWriter.swift; sourceTree = "<group>"; };
 		1EA5C2A41A56154400C1F2BD /* testfile.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = testfile.txt; path = Resources/testfile.txt; sourceTree = "<group>"; };
 		1EA930CA1A523871004D2A58 /* URLRequestWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLRequestWriter.swift; sourceTree = "<group>"; };
+		1EAEEEFF1A81AA3200342DC5 /* WebsocketClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 				1E6222A21A4E414800699864 /* TCPClientDelegate.swift */,
 				1E62228E1A4E391500699864 /* TCPClientConfiguration.swift */,
 				1E6222951A4E391500699864 /* TCPClient.swift */,
+				1EAEEEFF1A81AA3200342DC5 /* WebsocketClient.swift */,
 				1E566A101A72D3D6000A2073 /* LineDelimiter.swift */,
 			);
 			name = Stream;
@@ -405,6 +408,7 @@
 				1EA930CB1A523871004D2A58 /* URLRequestWriter.swift in Sources */,
 				1E62229D1A4E391500699864 /* StringWriter.swift in Sources */,
 				1E566A111A72D3D6000A2073 /* LineDelimiter.swift in Sources */,
+				1EAEEF001A81AA3200342DC5 /* WebsocketClient.swift in Sources */,
 				1E62229C1A4E391500699864 /* Writer.swift in Sources */,
 				1E6222961A4E391500699864 /* DataWriter.swift in Sources */,
 			);
