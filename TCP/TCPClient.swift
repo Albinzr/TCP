@@ -78,7 +78,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
         
         var success = false
 
-        if !open && createStreams() && configureStreams(inputStream, outputStream: outputStream) {
+        if !open && createStreams() && configureStreams(inputStream: inputStream, outputStream: outputStream) {
             prepareForOpenStreams()
             openStreams()
             success = true
@@ -252,7 +252,7 @@ public class TCPClient: NSObject, NSStreamDelegate {
 
     :returns: true if configuration was successful; otherwise, false. If false, the connect method will also return false.
     */
-    public func configureStreams(inputStream: NSInputStream!, outputStream: NSOutputStream!) -> Bool {
+    public func configureStreams(#inputStream: NSInputStream!, outputStream: NSOutputStream!) -> Bool {
         if secure {
             outputStream.setProperty(kCFStreamSocketSecurityLevelNegotiatedSSL, forKey: kCFStreamPropertySocketSecurityLevel)
 
